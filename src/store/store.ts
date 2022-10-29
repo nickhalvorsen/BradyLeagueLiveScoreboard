@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import espnReducer from "./espnSlice.ts";
+import espnReducer from "./espnSlice";
 
 export const store = configureStore({
     reducer: {

@@ -4,39 +4,39 @@ import axios from "axios";
 
 let config = require('../config.json');
 
-type Manager = {
+type Team = {
+  location: string;
+  nickname: string;
+}
 
+type ScoreboardRow = {
+  team: Team,
+  projectedPoints: number,
+  totalPoints: number,
 }
 
 type EspnSliceState = {
-    managers: Manager[];
+    scoreboardRows: ScoreboardRow[];
+    week: number;
 };
 
 const initialState: EspnSliceState = {
-    managers: []
+    scoreboardRows: [],
+    week: 0
 };
+
+const getSeasonYear = () => {
+  const d = new Date();
+  d.setMonth(d.getMonth()-3);
+  return d.getFullYear();
+}
 
 const getAllData = createAsyncThunk(
     'espn/getAllData',
     async (thunkAPI) => {
-        console.log('config', config);
-        // &view=mRoster to view player info (makes the response huge)
-        const url = `https://fantasy.espn.com/apis/v3/games/ffl/seasons/${config.seasonYear}/segments/0/leagues/${config.leagueId}?view=mLiveScoring&view=mMatchupScore&view=mSettings&view=mStandings&view=mStatus&view=mTeam&view=modular&view=mNav`;
-        const cookies = `espn_s2=${config.espnS2CookieValue}; SWID=${config.espnSwidCookieValue}`;
-
-        axios.defaults.withCredentials = true;
-        const instance = axios.create({
-            withCredentials: true
-        });            
-
-        const response = await axios.get(url,  {
-            headers: {
-              Cookie: cookies,
-            },
-            withCredentials: true,
-          })
-
-          return response;
+        // league needs to be set to public for this to work.
+        var response = await axios.get(`https://fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?view=mLiveScoring&view=mMatchupScore&view=mScoreboard`);
+        return response.data;
     }
   )
   
@@ -48,13 +48,35 @@ export const espnSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getAllData.fulfilled, (state, action) => {
-          console.log('the request done', action.payload)
+
+          const leagueDetails = action.payload;
+          const { teams, scoringPeriodId } = leagueDetails;
+          const matchupPeriodId = leagueDetails.status.currentMatchupPeriod;
+      
+          const thisWeeksMatchups = leagueDetails.schedule.filter(x => x.matchupPeriodId === matchupPeriodId);
+          const thisWeeksScoresDisregardingAwayHome = (thisWeeksMatchups.map(x => x.away)).concat(thisWeeksMatchups.map(x => x.home));
+          const thisWeeksMatchupsWithTeamData = thisWeeksScoresDisregardingAwayHome.map(x => {
+              return { ...x, team: teams.find(t => t.id === x.teamId) }
+          });
+          const thisWeeksMatchupsWithoutEliminatedTeams = thisWeeksMatchupsWithTeamData.filter(x => !x.team.location.includes('[RIP]'));
+          const cleanedDataObject = thisWeeksMatchupsWithoutEliminatedTeams.map(x => {
+            return {
+              totalPoints: x.totalPointsLive,
+              projectedPoints: x.totalProjectedPointsLive,
+              adjustment: x.adjustment,
+              team: x.team
+            };
+          })
+
+          state.week = scoringPeriodId;
+
+          state.scoreboardRows = cleanedDataObject;
         })
       },
 });
 
 // Action creators are generated for each case reducer function
 //export const { getAllData } = espnSlice.actions;
-export { getAllData };
+export { getAllData, ScoreboardRow };
 
 export default espnSlice.reducer;

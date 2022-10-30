@@ -7,6 +7,7 @@ let config = require('../config.json');
 type Team = {
   location: string;
   nickname: string;
+  logo: string;
 }
 
 type ScoreboardRow = {
@@ -58,7 +59,7 @@ export const espnSlice = createSlice({
           const thisWeeksMatchupsWithTeamData = thisWeeksScoresDisregardingAwayHome.map(x => {
               return { ...x, team: teams.find(t => t.id === x.teamId) }
           });
-          const thisWeeksMatchupsWithoutEliminatedTeams = thisWeeksMatchupsWithTeamData.filter(x => !x.team.location.includes('[RIP]'));
+          const thisWeeksMatchupsWithoutEliminatedTeams = thisWeeksMatchupsWithTeamData.filter(x => !x.team.location.includes('🪦'));// headstone emoji
           const cleanedDataObject = thisWeeksMatchupsWithoutEliminatedTeams.map(x => {
             return {
               totalPoints: x.totalPointsLive,

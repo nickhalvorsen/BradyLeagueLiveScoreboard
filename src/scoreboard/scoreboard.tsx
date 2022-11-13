@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { ScoreboardRow as ScoreboardRowData } from '../store/espnSlice';
 
 const Scoreboard = () => {
-    const [isHintVisible, setIsHintVisible] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -20,31 +19,35 @@ const Scoreboard = () => {
     let scoreboardRows: ScoreboardRowData[] = useSelector<RootState>(state => state.espn.scoreboardRows) as ScoreboardRowData[];
     let sorted = scoreboardRows.slice();
     sorted.sort((a,b) => b.projectedPoints - a.projectedPoints);
-    //sorted.sort((a,b) => b.totalPoints - a.totalPoints);
-
+console.log('sorted',sorted)
     return (
         <div style={styles}>
-            <div>Tom Brady's score board</div>
+            <div>TOM BRADY'S BATTLE ROYALE live scoreboard</div>
             <p>🛡️ = immunity</p>
-            {sorted.map((x, index) =>  (
-                <ScoreboardRow 
-                    label={`${x.team.location} ${x.team.nickname}`} 
-                    //value={`${x.totalPoints.toFixed(1)} / ${x.projectedPoints.toFixed(1)}`}
-                    points={x.totalPoints.toFixed(2)}
-                    projectedPoints={x.projectedPoints.toFixed(2)} 
-                    isLast={(index === sorted.length - 1 && !x.team.location.includes('🛡️') || (index === sorted.length - 2 && sorted[sorted.length-1].team.location.includes('🛡️')))} 
-                    key={index} 
-                    imageUrl={x.team.logo}
-                    />
-            ))}
-            {}
+            {/* for some reason, flexDirection: 'column' doesn't work in the style object */}
+            <div  style={{...scoreboardContainerStyles , flexDirection:'column'}}>
+                {sorted.map((x, index) =>  (
+                    <ScoreboardRow 
+                        label={`${x.team.location} ${x.team.nickname}`} 
+                        points={x.totalPoints.toFixed(1)}
+                        projectedPoints={x.projectedPoints.toFixed(1)} 
+                        isLast={(index === sorted.length - 1 && !x.team.location.includes('🛡️') || (index === sorted.length - 2 && sorted[sorted.length-1].team.location.includes('🛡️')))} 
+                        key={index} 
+                        imageUrl={x.team.logo}
+                        />
+                ))}
+            </div>
         </div>
     )
 }
 
 const styles = {
-    maxWidth: '25em',
     padding: '.5em'
+}
+
+const scoreboardContainerStyles = {
+    maxWidth: '30em',
+    display: 'flex',
 }
 
 export default Scoreboard;

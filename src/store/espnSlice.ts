@@ -54,8 +54,12 @@ export const espnSlice = createSlice({
           const matchupPeriodId = leagueDetails.status.currentMatchupPeriod;
       
           const thisWeeksMatchups = leagueDetails.schedule.filter(x => x.matchupPeriodId === matchupPeriodId);
-          const thisWeeksScoresDisregardingAwayHome = (thisWeeksMatchups.map(x => x.away)).concat(thisWeeksMatchups.map(x => x.home));
-          const thisWeeksMatchupsWithTeamData = thisWeeksScoresDisregardingAwayHome.map(x => {
+          const thisWeeksScoresDisregardingAwayHome = (thisWeeksMatchups.map(x => x.away))
+            .concat(thisWeeksMatchups.map(x => x.home))
+            // filter out "bye week" null teams when there are an uneven amount of managers in league
+            .filter(x => !!x);
+          const thisWeeksMatchupsWithTeamData = thisWeeksScoresDisregardingAwayHome
+            .map(x => {
               return { ...x, team: teams.find(t => t.id === x.teamId) }
           });
 

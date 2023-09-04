@@ -19,7 +19,6 @@ const Scoreboard = () => {
     let scoreboardRows: ScoreboardRowData[] = useSelector<RootState>(state => state.espn.scoreboardRows) as ScoreboardRowData[];
     let sorted = scoreboardRows.slice();
     sorted.sort((a,b) => b.projectedPoints - a.projectedPoints);
-console.log('sorted',sorted)
     return (
         <div style={styles}>
             <div>TOM BRADY'S BATTLE ROYALE live scoreboard</div>

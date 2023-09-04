@@ -2,6 +2,6 @@
 How to deploy:
 
 * npm run build
-* right-click on build folder, deploy to static website
-* select the azure storage account
+* upload the build folder to azure storage
+* if CSS fails to load in browser, you might need to change the content type to "text/css" on the CSS file, in azure storage.
 * yahoo

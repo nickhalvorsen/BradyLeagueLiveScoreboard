@@ -28,10 +28,10 @@ console.log('sorted',sorted)
             <div  style={{...scoreboardContainerStyles , flexDirection:'column'}}>
                 {sorted.map((x, index) =>  (
                     <ScoreboardRow 
-                        label={`${x.team.location} ${x.team.nickname}`} 
+                        label={`${x.team.name}`} 
                         points={x.totalPoints.toFixed(1)}
                         projectedPoints={x.projectedPoints.toFixed(1)} 
-                        isLast={(index === sorted.length - 1 && !x.team.location.includes('🛡️') || (index === sorted.length - 2 && sorted[sorted.length-1].team.location.includes('🛡️')))} 
+                        isLast={(index === sorted.length - 1 && !x.team.name.includes('🛡️') || (index === sorted.length - 2 && sorted[sorted.length-1].team.name.includes('🛡️')))} 
                         key={index} 
                         imageUrl={x.team.logo}
                         />

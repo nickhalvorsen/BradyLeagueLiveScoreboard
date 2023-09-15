@@ -1,12 +1,17 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getScoreboardRequestHandler } from "./getScoreboardRequestHandler";
 import axios from "axios";
-//import config from '../config'
+import { getSeasonYear } from "./getSeasonYear";
 
 let config = require('../config.json');
 
 type Team = {
+  id: number;
   name: string;
   logo: string;
+  isEliminated: boolean;
+  isImmune: boolean;
+  bufferPeriodTotalPoints: number;
 }
 
 type ScoreboardRow = {
@@ -18,28 +23,23 @@ type ScoreboardRow = {
 type EspnSliceState = {
     scoreboardRows: ScoreboardRow[];
     week: number;
+    teams: Team[];
 };
 
 const initialState: EspnSliceState = {
     scoreboardRows: [],
-    week: 0
+    week: 0,
+    teams: [],
 };
 
-const getSeasonYear = () => {
-  const d = new Date();
-  d.setMonth(d.getMonth()-3);
-  return d.getFullYear();
-}
-
-const getAllData = createAsyncThunk(
-    'espn/getAllData',
+const getScoreboard = createAsyncThunk(
+    'espn/getScoreboard',
     async (thunkAPI) => {
-        // league needs to be set to public for this to work.
+        // league needs to public
         var response = await axios.get(`https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?view=mLiveScoring&view=mMatchupScore&view=mScoreboard`);
         return response.data;
     }
-  )
-  
+  );
 
 export const espnSlice = createSlice({
     name: "espn",
@@ -47,41 +47,10 @@ export const espnSlice = createSlice({
     reducers: {
     },
     extraReducers: (builder) => {
-        builder.addCase(getAllData.fulfilled, (state, action) => {
-
-          const leagueDetails = action.payload;
-          const { teams, scoringPeriodId } = leagueDetails;
-          const matchupPeriodId = leagueDetails.status.currentMatchupPeriod;
-      
-          const thisWeeksMatchups = leagueDetails.schedule.filter(x => x.matchupPeriodId === matchupPeriodId);
-          const thisWeeksScoresDisregardingAwayHome = (thisWeeksMatchups.map(x => x.away))
-            .concat(thisWeeksMatchups.map(x => x.home))
-            // filter out "bye week" null teams when there are an uneven amount of managers in league
-            .filter(x => !!x);
-          const thisWeeksMatchupsWithTeamData = thisWeeksScoresDisregardingAwayHome
-            .map(x => {
-              return { ...x, team: teams.find(t => t.id === x.teamId) }
-          });
-
-          const thisWeeksMatchupsWithoutEliminatedTeams = thisWeeksMatchupsWithTeamData.filter(x => !x.team.name.includes('🪦'));// headstone emoji
-          const cleanedDataObject = thisWeeksMatchupsWithoutEliminatedTeams.map(x => {
-            return {
-              totalPoints: x.totalPointsLive,
-              projectedPoints: x.totalProjectedPointsLive,
-              adjustment: x.adjustment,
-              team: x.team
-            };
-          })
-
-          state.week = scoringPeriodId;
-
-          state.scoreboardRows = cleanedDataObject;
-        })
+        builder.addCase(getScoreboard.fulfilled, getScoreboardRequestHandler)
       },
 });
 
-// Action creators are generated for each case reducer function
-//export const { getAllData } = espnSlice.actions;
-export { getAllData, ScoreboardRow };
+export { getScoreboard, EspnSliceState, ScoreboardRow, Team };
 
 export default espnSlice.reducer;

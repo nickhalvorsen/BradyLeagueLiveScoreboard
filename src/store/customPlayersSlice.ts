@@ -3,7 +3,7 @@ import { getCustomPlayersRequestHandler } from "./getCustomPlayersRequestHandler
 import axios from "axios";
 import { getSeasonYear } from "./getSeasonYear";
 
-let config = require('../config.json');
+const config = require('../config.json');
 
 type CustomPlayer = {
   name: string;

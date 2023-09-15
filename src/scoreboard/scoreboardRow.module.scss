@@ -7,15 +7,29 @@
     border-color: black;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    background-color: #F4F4F4;
+    margin: 0;
+    padding: .3em .5em;
+    border: 1px solid #CCC;
+}
+
+.nameContainer {
+    display: flex;
+    align-items: center;
+}
+
+.scoreContainer {
+    min-width: 7em;
+    margin-left: .5em;
 }
 
 .icon {
-    margin-right: 1em;
+    margin-right: .5em;
 }
 
 .label {
     display: inline-block;
-    width: 40%;
     margin-right: .5em;
 }
 
@@ -27,6 +41,10 @@
 
 .descriptor {
     font-size: .8em,
+}
+
+.isLast {
+    background-color: #f7d2d5;
 }
 
 @media (max-width: 480px) {    

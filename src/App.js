@@ -1,14 +1,11 @@
+import React from 'react';
+import BradyScoreboards from './scoreboard/bradyScoreboards';
 import './App.css';
-import Scoreboard from './scoreboard/scoreboard.tsx';
-import BufferPeriodScoreboard from './scoreboard/bufferPeriodScoreboard';
 
-function App() {
-  return (
+const App = () => (
     <div className="App">
-      <Scoreboard/>
-      <BufferPeriodScoreboard/>
+      <BradyScoreboards/>
     </div>
   );
-}
 
 export default App;

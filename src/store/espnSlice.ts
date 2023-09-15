@@ -3,7 +3,7 @@ import { getScoreboardRequestHandler } from "./getScoreboardRequestHandler";
 import axios from "axios";
 import { getSeasonYear } from "./getSeasonYear";
 
-let config = require('../config.json');
+const config = require('../config.json');
 
 type Team = {
   id: number;
@@ -11,7 +11,6 @@ type Team = {
   logo: string;
   isEliminated: boolean;
   isImmune: boolean;
-  bufferPeriodTotalPoints: number;
 }
 
 type ScoreboardRow = {
@@ -22,14 +21,18 @@ type ScoreboardRow = {
 
 type EspnSliceState = {
     scoreboardRows: ScoreboardRow[];
+    bufferPeriodScoreboardRows: ScoreboardRow[];
     week: number;
     teams: Team[];
+    lastUpdated?: string; // ISO string
 };
 
 const initialState: EspnSliceState = {
     scoreboardRows: [],
+    bufferPeriodScoreboardRows: [],
     week: 0,
     teams: [],
+    lastUpdated: undefined
 };
 
 const getScoreboard = createAsyncThunk(

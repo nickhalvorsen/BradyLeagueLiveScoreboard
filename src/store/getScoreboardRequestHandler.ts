@@ -1,12 +1,15 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { EspnSliceState } from './espnSlice';
 
+const config = require('../config.json');
+
 const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadAction<any,string>) => {
     const leagueDetails = action.payload;
     const { teams, scoringPeriodId } = leagueDetails;
+    state.week = scoringPeriodId;
 
     const thisWeeksScores = getMatchupsFromSchedule(leagueDetails.schedule, x => x.matchupPeriodId === leagueDetails.status.currentMatchupPeriod);
-    const bufferPeriodScores = getMatchupsFromSchedule(leagueDetails.schedule, x => [1,2,3].includes(x.matchupPeriodId));
+    const earlierBufferPeriodScores = getMatchupsFromSchedule(leagueDetails.schedule, x => x.matchupPeriodId <= config.bufferPeriodWeeks && x.matchupPeriodId < state.week);
 
     state.teams = teams.map(t => ({
       ...t,
@@ -14,22 +17,22 @@ const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadActio
       isEliminated: t.name.includes('🪦'),
     }))
 
-    const scoreboardRows = thisWeeksScores.map(x => ({
-      totalPoints: x.totalPointsLive,
-      projectedPoints: x.totalProjectedPointsLive,
-      adjustment: x.adjustment,
-      team: state.teams.find(t => t.id === x.teamId)
+    const scoreboardRows = thisWeeksScores.map(s => ({
+      totalPoints: s.totalPointsLive,
+      projectedPoints: s.totalProjectedPointsLive,
+      adjustment: s.adjustment,
+      team: state.teams.find(t => t.id === s.teamId),
     }));
 
-    state.teams = state.teams.map(t => ({
-      ...t,
-      //bufferPeriodTotalPoints: ,
-      //bufferPeriodTotalProjection: ,
-      bufferPeriodTotalPoints: bufferPeriodScores.filter(x => x.teamId === t.id).reduce((accum,item) => accum + (item.totalPoints ?? 0) + (item.totalPointsLive ?? 0), 0),
-    }))
+    const bufferPeriodScoreboardRows = thisWeeksScores.map(s => ({
+      team: state.teams.find(t => t.id === s.teamId),
+      totalPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + s.totalPointsLive,
+      projectedPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + s.totalProjectedPointsLive
+    }));
 
-    state.week = scoringPeriodId;
     state.scoreboardRows = scoreboardRows;
+    state.bufferPeriodScoreboardRows = bufferPeriodScoreboardRows;
+    state.lastUpdated = new Date().toISOString();
 }
 
 const getMatchupsFromSchedule = (schedule, scheduleFilter)  => {
@@ -40,10 +43,6 @@ const getMatchupsFromSchedule = (schedule, scheduleFilter)  => {
       .filter(x => !!x);
 
       return scores;
-}
-
-const getBufferPeriodScores = () => {
-
 }
 
 export { getScoreboardRequestHandler }

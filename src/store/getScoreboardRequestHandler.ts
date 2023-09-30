@@ -14,20 +14,19 @@ const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadActio
     state.teams = teams.map(t => ({
       ...t,
       isImmune: t.name.includes('🛡️'),
-      isEliminated: t.name.includes('🪦'),
+      isEliminated: t.name.includes('💀'),
     }))
 
     const scoreboardRows = thisWeeksScores.map(s => ({
-      totalPoints: s.totalPointsLive,
-      projectedPoints: s.totalProjectedPointsLive,
-      adjustment: s.adjustment,
+      totalPoints: s.totalPointsLive + s.adjustment,
+      projectedPoints: s.totalProjectedPointsLive + s.adjustment,
       team: state.teams.find(t => t.id === s.teamId),
     }));
 
     const bufferPeriodScoreboardRows = thisWeeksScores.map(s => ({
       team: state.teams.find(t => t.id === s.teamId),
-      totalPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + s.totalPointsLive,
-      projectedPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + s.totalProjectedPointsLive
+      totalPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + s.totalPointsLive + s.adjustment, // todo: adjustment for first 2 weeks? 
+      projectedPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + s.totalProjectedPointsLive + s.adjustment
     }));
 
     state.scoreboardRows = scoreboardRows;

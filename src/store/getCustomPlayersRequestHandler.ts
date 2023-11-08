@@ -1,20 +1,23 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { CustomPlayerSliceState } from "./customPlayersSlice";
-
-const justinJeffersonEspnPlayerId = 4262921;
-const derekCarrEspnPlayerId = 16757;
+import { referencePlayerIds } from "../customPlayer/customPlayer";
 
 const getCustomPlayersRequestHandler = (state: CustomPlayerSliceState, action: PayloadAction<any,string>) => {
-    const leagueDetails = action.payload;
-    console.log('leagueDetails', leagueDetails)
+    const playersQuery = action.payload.players;
 
-    const allPlayers = leagueDetails.teams.flatMap(t => t.roster).flatMap(r => r.entries);
+    console.log('playersQuery', playersQuery)
+    const justinJefferson = playersQuery.find(p => p.id === referencePlayerIds.justinJefferson);
+    const derekCarr = playersQuery.find(p => p.id === referencePlayerIds.derekCarr);
+    console.log('jefferso', justinJefferson);
 
-    console.log('allPlayers', allPlayers);
+    // TODO: get their current points for this week
 
-    //state.customPlayerReferenceData.justinJeffersonTotalPoints = ;
-    //state.customPlayerReferenceData.derekCarrTotalPoints = ;
+    //state.customPlayerReferenceData.jermarJeffersonPoints = ;
+    //state.customPlayerReferenceData.derekCarrierPoints = ;
+    //state.customPlayerReferenceData.kylerMurrayPoints = ;
 };
+
+const getPlayerProjection = (player) => player.player.stats.find(s => s.externalId = 20233);
 
 // todo: cardinals win checker 
 

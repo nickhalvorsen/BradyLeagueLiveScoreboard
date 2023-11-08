@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getCustomPlayersRequestHandler } from "./getCustomPlayersRequestHandler";
 import axios from "axios";
 import { getSeasonYear } from "./getSeasonYear";
+import { referencePlayerIds } from "../customPlayer/customPlayer";
 
 const config = require('../config.json');
 
@@ -33,10 +34,24 @@ const initialState: CustomPlayerSliceState = {
 };
 
 const getCustomPlayers = createAsyncThunk(
-  'espn/getCustomPlayers',
+  'customPlayers/getCustomPlayers',
   async(thunkAPI) => {
-    // league needs to public
-    var response = await axios.get(`https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?view=mRoster&view=mTeam`);
+    const cfg = {
+      headers:{
+        'X-Fantasy-Filter': JSON.stringify({"players":{"filterIds":{"value":[referencePlayerIds.justinJefferson, referencePlayerIds.derekCarr]},"sortPercOwned":{"sortPriority":2,"sortAsc":false},"filterRanksForSlotIds":{"value":[0,2,4,6,17,16]},"filterStatsForTopScoringPeriodIds":{"value":2,"additionalValue":["002023","102023","002022","1120233","022023"]}}})
+      }
+    };
+
+    // league needs to be public
+    const response = await axios.get(`https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?scoringPeriodId=3&view=kona_player_info`, cfg as any);
+    return response.data;
+  }
+)
+
+const getNflGames = createAsyncThunk(
+  'customPlayers/getNflGames',
+  async (thunkAPI) => {
+    const response = await axios.get('https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2023?view=proTeamSchedules_wl');
     return response.data;
   }
 )
@@ -48,9 +63,10 @@ export const customPlayersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getCustomPlayers.fulfilled, getCustomPlayersRequestHandler)
+        //builder.addCase(getNflGames.fulfilled, getNflGamesRequestHandler)
       },
 });
 
-export { getCustomPlayers, CustomPlayerSliceState };
+export { getCustomPlayers, getNflGames,  CustomPlayerSliceState };
 
 export default customPlayersSlice.reducer;

@@ -19,4 +19,9 @@ const customPlayers: CustomPlayer[] = [
     }
 ]
 
-export { customPlayers }
+const referencePlayerIds = {
+    justinJefferson: 4262921,
+    derekCarr: 16757
+};
+
+export { customPlayers, referencePlayerIds }

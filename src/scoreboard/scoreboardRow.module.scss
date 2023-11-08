@@ -40,15 +40,23 @@
 }
 
 .descriptor {
-    font-size: .8em,
+    font-size: .8em;
 }
 
 .isLast {
     background-color: #f7d2d5;
 }
 
+.currentTotal {
+    display: inline-block;
+    // aligns totals when current points have different amount of digits
+    min-width: 7em;
+}
+
 @media (max-width: 480px) {    
     .currentTotal {
         display: block;
+        
+        min-width: unset;
     }    
 }

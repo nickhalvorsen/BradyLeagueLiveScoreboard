@@ -1,22 +1,20 @@
 import React from 'react';
-import { ScoreboardRow as ScoreboardRowData } from '../store/espnSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import Scoreboard from './scoreboard';
+import config from '../config.json';
+import { useSortedBufferPeriodScoreboardRows } from './useSortedBufferPeriodScoreboardRows';
 
-const config = require('../config.json');
-
-const BufferPeriodScoreboard = () => {
-    const rows: ScoreboardRowData[] = useSelector<RootState>(state => state.espn.bufferPeriodScoreboardRows) as ScoreboardRowData[];
-    const sortedRows = rows.slice().sort((a,b) => b.projectedPoints - a.projectedPoints);
+const BufferPeriodScoreboard: React.FC = () => {
     const week = useSelector<RootState>(state => state.espn.week) as number;
+    const rows = useSortedBufferPeriodScoreboardRows();
 
     return (
         <div>
                 <p>TOM BRADY'S BATTLE ROYALE live week 1&ndash;{week} scoring totals</p>
                 <p>({config.bufferPeriodWeeks} week buffer period)</p>
                 <div>
-                    <Scoreboard rows={sortedRows} />
+                    <Scoreboard rows={rows} />
                 </div>
             </div>
     )

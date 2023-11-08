@@ -1,27 +1,27 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getScoreboard } from '../store/espnSlice';
-import { getCustomPlayers } from '../store/customPlayersSlice';
 import { AppDispatch } from '../store/store';
 
-const useRefreshScoreboard = () => {
+const useRefreshScoreboard = (intervalSeconds: number) => {
     const dispatch = useDispatch<AppDispatch>();
     const [scoreboardIntervalToken, setScoreboardIntervalToken] = useState<NodeJS.Timer>();
 
-    useEffect(() => {
+    const activateRefreshInterval = () => {
         dispatch(getScoreboard());
-        dispatch(getCustomPlayers());
         
-        const t = setInterval(() => {
-            dispatch(getScoreboard());
-        }, 5000);
+        const intervalMilliseconds = intervalSeconds * 1000;
+        const intervalToken = setInterval(() => dispatch(getScoreboard()), intervalMilliseconds);
 
-        setScoreboardIntervalToken(t);
+        setScoreboardIntervalToken(intervalToken);
 
         return () => {
             clearInterval(scoreboardIntervalToken);
         }
-    }, []);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(activateRefreshInterval, []);
 }
 
 export default useRefreshScoreboard;

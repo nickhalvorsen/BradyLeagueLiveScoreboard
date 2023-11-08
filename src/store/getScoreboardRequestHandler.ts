@@ -1,34 +1,35 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { EspnSliceState } from './espnSlice';
+import config from '../config.json';
+import { EspnScoreboardApiResponse, Schedule, MatchupTeam } from "./espnApiResponseTypes";
 
-const config = require('../config.json');
+const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadAction<EspnScoreboardApiResponse, string>) => {
+    const { teams, scoringPeriodId, schedule } = action.payload;
+    state.week = scoringPeriodId;
 
-const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadAction<any,string>) => {
-    const leagueDetails = action.payload;
-    const { teams, scoringPeriodId } = leagueDetails;
-    //state.week = scoringPeriodId;
-    state.week = scoringPeriodId-1;
-    console.log(leagueDetails.schedule);
+    // For Tuesday league maintenance, I need a screenshot of the previous week's scoreboard
+    if (config.displayPreviousWeekScores)
+      state.week--;
 
-    const thisWeeksScores = getMatchupsFromSchedule(leagueDetails.schedule, x => x.matchupPeriodId === state.week);
-    const earlierBufferPeriodScores = getMatchupsFromSchedule(leagueDetails.schedule, x => x.matchupPeriodId <= config.bufferPeriodWeeks && x.matchupPeriodId < state.week);
+    const matchupTeams = getMatchupsFromSchedule(schedule, x => x.matchupPeriodId === state.week);
+    const bufferPeriodMatchupTeams = getMatchupsFromSchedule(schedule, x => x.matchupPeriodId <= config.bufferPeriodWeeks && x.matchupPeriodId <= state.week);
 
     state.teams = teams.map(t => ({
       ...t,
       isImmune: t.name.includes('🛡️'),
       isEliminated: t.name.includes('💀'),
-    }))
-
-    const scoreboardRows = thisWeeksScores.map(s => ({
-      totalPoints: (s.totalPointsLive ?? s.totalPoints) + s.adjustment,
-      projectedPoints: (s.totalProjectedPointsLive ?? s.totalPoints) + s.adjustment,
-      team: state.teams.find(t => t.id === s.teamId),
     }));
 
-    const bufferPeriodScoreboardRows = thisWeeksScores.map(s => ({
-      team: state.teams.find(t => t.id === s.teamId),
-      totalPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + (s.totalPointsLive ?? 0) + s.adjustment, // todo: adjustment for first 2 weeks? 
-      projectedPoints: earlierBufferPeriodScores.filter(x => x.teamId === s.teamId).reduce((accum,item) => accum + (item.totalPoints ?? 0), 0) + (s.totalProjectedPointsLive ?? 0) + s.adjustment
+    const scoreboardRows = matchupTeams.map(t => ({
+      team: state.teams.find(tt => tt.id === t.teamId)!,
+      totalPoints: getTotalPoints(t),
+      projectedPoints: getProjectedPoints(t),
+    }));
+
+    const bufferPeriodScoreboardRows = matchupTeams.map(s => ({
+      team: state.teams.find(t => t.id === s.teamId)!,
+      totalPoints: bufferPeriodMatchupTeams.filter(x => x.teamId === s.teamId).reduce((accum,matchup) => accum + getTotalPoints(matchup), 0), 
+      projectedPoints: bufferPeriodMatchupTeams.filter(x => x.teamId === s.teamId).reduce((accum,matchup) => accum + (getProjectedPoints(matchup)), 0), 
     }));
 
     state.scoreboardRows = scoreboardRows;
@@ -36,14 +37,18 @@ const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadActio
     state.lastUpdated = new Date().toISOString();
 }
 
-const getMatchupsFromSchedule = (schedule, scheduleFilter)  => {
+const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Schedule) => boolean)  => {
     const matchups = schedule.filter(scheduleFilter);
     const scores = (matchups.map(x => x.away))
       .concat(matchups.map(x => x.home))
-      // filter out "bye week" null teams when there are an uneven amount of managers in league
+      // filter out null teams due to "bye week" matchups
+      // "bye week" matchups occur when there are an uneven amount of managers in league
       .filter(x => !!x);
 
       return scores;
 }
+
+const getTotalPoints = (team: MatchupTeam) => (team.totalPointsLive ?? team.totalPoints) + team.adjustment;
+const getProjectedPoints = (team: MatchupTeam) => (team.totalProjectedPointsLive ?? team.totalPoints) + team.adjustment;
 
 export { getScoreboardRequestHandler }

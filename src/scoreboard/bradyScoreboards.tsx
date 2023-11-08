@@ -5,22 +5,21 @@ import { RootState } from '../store/store';
 import BufferPeriodScoreboard from "./bufferPeriodScoreboard";
 import WeeklyScoreboard from "./weeklyScoreboard";
 import LastUpdated from './lastUpdated';
+import config from '../config.json';
 
-const config = require('../config.json');
+const BradyScoreboards: React.FC = () => {
+    const currentWeek = useSelector<RootState>(state => state.espn.week) as number;
+    const showBufferPeriodScoreboard = currentWeek <= config.bufferPeriodWeeks;
 
-const BradyScoreboards = () => {
-    const week = useSelector<RootState>(state => state.espn.week) as number;
-    const showBufferPeriodScoreboard = week <= config.bufferPeriodWeeks;
-
-    useRefreshScoreboard();
+    useRefreshScoreboard(5);
 
   return (
-    <div>
+    <>
         {showBufferPeriodScoreboard 
             ? <BufferPeriodScoreboard/> 
             : <WeeklyScoreboard/>}
         {/* <LastUpdated/> */}
-    </div>
+    </>
   )
 }
 

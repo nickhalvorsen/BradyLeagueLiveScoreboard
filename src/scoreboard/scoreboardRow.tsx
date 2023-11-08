@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './scoreboardRow.module.scss';
 
-interface ScoreboardRowProps {
+interface Props {
     label: string;
     value?: string;
     points?: string | number;
@@ -11,7 +11,7 @@ interface ScoreboardRowProps {
     imageUrl?: string;
 }
 
-const ScoreboardRow = (props: ScoreboardRowProps) => (
+const ScoreboardRow: React.FC<Props> = (props: Props) => (
     <div className={`${classes.container} ${props.isLast ? classes.isLast : ''}`}>
         <div className={classes.nameContainer}>
             <img className={classes.icon} src={props.imageUrl} width="24" alt="team logo"/>

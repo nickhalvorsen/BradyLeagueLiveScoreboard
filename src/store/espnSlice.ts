@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getScoreboardRequestHandler } from "./getScoreboardRequestHandler";
 import axios from "axios";
 import { getSeasonYear } from "./getSeasonYear";
-
-const config = require('../config.json');
+import config from '../config.json';
+import { EspnScoreboardApiResponse } from "./espnApiResponseTypes";
 
 type Team = {
   id: number;
@@ -40,7 +40,7 @@ const getScoreboard = createAsyncThunk(
     async (thunkAPI) => {
         // league needs to be public
         var response = await axios.get(`https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?view=mLiveScoring&view=mMatchupScore&view=mScoreboard`);
-        return response.data;
+        return response.data as EspnScoreboardApiResponse;
     }
   );
 

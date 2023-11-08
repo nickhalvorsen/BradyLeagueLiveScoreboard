@@ -1,4 +1,5 @@
 {
     "leagueId": "855735757",
-    "bufferPeriodWeeks": 3
+    "bufferPeriodWeeks": 3, 
+    "displayPreviousWeekScores": false
 }

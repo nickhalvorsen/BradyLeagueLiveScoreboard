@@ -1,25 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import ScoreboardRow from './scoreboardRow';
-import { getScoreboard } from '../store/espnSlice';
-import { getCustomPlayers } from '../store/customPlayersSlice';
-import { AppDispatch, RootState } from '../store/store';
+import React from 'react';
+import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-import { ScoreboardRow as ScoreboardRowData } from '../store/espnSlice';
 import Scoreboard from './scoreboard';
+import { useSortedScoreboardRows } from './useSortedScoreboardRows';
 
-const WeeklyScoreboard = () => {
-    const scoreboardRows: ScoreboardRowData[] = useSelector<RootState>(state => state.espn.scoreboardRows) as ScoreboardRowData[];
-    const week = useSelector<RootState>(state => state.espn.week) as number;
-    let sorted = scoreboardRows.filter(x => !x.team.isEliminated).slice();
-    sorted.sort((a,b) => b.projectedPoints - a.projectedPoints);
+const WeeklyScoreboard: React.FC = () => {
+    const weekNumber = useSelector<RootState>(state => state.espn.week) as number;
+    const rows = useSortedScoreboardRows();
 
     return (
         <div>
-            <div>TOM BRADY'S BATTLE ROYALE live scoreboard &mdash; week {week}</div>
+            <div>TOM BRADY'S BATTLE ROYALE live scoreboard &mdash; week {weekNumber}</div>
             <p>🛡️ = immunity</p>
             <div>
-                <Scoreboard rows={sorted}/>
+                <Scoreboard rows={rows}/>
             </div>
         </div>
     )

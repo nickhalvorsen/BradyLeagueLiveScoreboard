@@ -7,7 +7,7 @@ import * as timeago from 'timeago.js';
 const LastUpdated = () => {
     
     const lastUpdated = useSelector<RootState>(state => state.espn.lastUpdated) as Date;
-    var locale = function(number, index, totalSec) {
+    const locale = function(number, index, totalSec) {
         // number: the time ago / time in number;
         // index: the index of array below;
         // totalSec: total seconds between date to be formatted and today's date;

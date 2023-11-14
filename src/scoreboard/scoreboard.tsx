@@ -1,5 +1,5 @@
 import React from 'react';
-import ScoreboardRow from "./scoreboardRow";
+import { ScoreboardRow } from "./scoreboardRow";
 import { ScoreboardRow as ScoreboardRowData } from '../store/espnSlice';
 import classes from './scoreboard.module.scss';
 
@@ -22,4 +22,4 @@ const Scoreboard: React.FC<Props> = (props) => (
     </div>
 );
 
-export default Scoreboard;
+export { Scoreboard };

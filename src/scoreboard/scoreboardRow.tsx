@@ -25,4 +25,4 @@ const ScoreboardRow: React.FC<Props> = (props: Props) => (
     </div>
 );
 
-export default ScoreboardRow;
+export { ScoreboardRow };

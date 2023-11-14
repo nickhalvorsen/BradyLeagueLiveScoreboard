@@ -55,4 +55,3 @@ export const espnSlice = createSlice({
 
 export { getScoreboard, EspnSliceState, ScoreboardRow, Team };
 
-export default espnSlice.reducer;

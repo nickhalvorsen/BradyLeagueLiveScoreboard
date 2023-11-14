@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import espnReducer from "./espnSlice";
+import { espnSlice } from "./espnSlice";
 
 export const store = configureStore({
     reducer: {
-        espn: espnReducer
+        espn: espnSlice.reducer
     },
 });
 

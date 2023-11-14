@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import Scoreboard from './scoreboard';
+import { Scoreboard } from './scoreboard';
 import config from '../config.json';
 import { useSortedBufferPeriodScoreboardRows } from './useSortedBufferPeriodScoreboardRows';
 
@@ -21,4 +21,4 @@ const BufferPeriodScoreboard: React.FC = () => {
     
 }
 
-export default BufferPeriodScoreboard;
+export { BufferPeriodScoreboard };

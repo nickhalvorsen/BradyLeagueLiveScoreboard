@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from '../store/store';
-import BufferPeriodScoreboard from "./bufferPeriodScoreboard";
-import WeeklyScoreboard from "./weeklyScoreboard";
-import LastUpdated from './lastUpdated';
+import { BufferPeriodScoreboard } from "./bufferPeriodScoreboard";
+import { WeeklyScoreboard } from "./weeklyScoreboard";
+import { LastUpdated } from './lastUpdated';
 import config from '../config.json';
 import { useInterval } from './useInterval';
 import { getScoreboard } from '../store/espnSlice';
@@ -25,4 +25,4 @@ const BradyScoreboards: React.FC = () => {
   )
 }
 
-export default BradyScoreboards;
+export { BradyScoreboards };

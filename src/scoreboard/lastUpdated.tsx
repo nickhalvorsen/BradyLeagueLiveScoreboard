@@ -40,4 +40,4 @@ const LastUpdated = () => {
     )
 }
 
-export default LastUpdated;
+export { LastUpdated };

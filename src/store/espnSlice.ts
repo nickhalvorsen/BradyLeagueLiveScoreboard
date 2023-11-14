@@ -37,7 +37,7 @@ const initialState: EspnSliceState = {
 
 const getScoreboard = createAsyncThunk(
     'espn/getScoreboard',
-    async (thunkAPI) => {
+    async () => {
         // league needs to be public
         const response = await axios.get(`https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?view=mLiveScoring&view=mMatchupScore&view=mScoreboard`);
         return response.data as EspnScoreboardApiResponse;
@@ -47,8 +47,7 @@ const getScoreboard = createAsyncThunk(
 export const espnSlice = createSlice({
     name: "espn",
     initialState,
-    reducers: {
-    },
+    reducers: { },
     extraReducers: (builder) => {
         builder.addCase(getScoreboard.fulfilled, getScoreboardRequestHandler)
       },

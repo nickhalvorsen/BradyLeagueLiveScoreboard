@@ -1,7 +1,9 @@
-# This is the Brady's score board 
-How to deploy:
+# TOM BRADY'S BATTLE ROYALE fantasy league live scoreboard
 
-* npm run build
-* upload the build folder to azure storage
-* if CSS fails to load in browser, you might need to change the content type to "text/css" on the CSS file, in azure storage.
-* yahoo
+Live scoreboard application for TOM BRADY'S BATTLE ROYALE, a custom fantasy football league. The league is hosted on ESPN's fantasy platform. 
+
+## How to deploy
+
+1. npm run build
+2. Upload the build folder to Azure storage
+3. Change the content type of the CSS file in Azure storage to "text/css"

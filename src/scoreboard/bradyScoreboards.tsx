@@ -1,17 +1,19 @@
 import React from 'react';
-import { useSelector } from "react-redux";
-import useRefreshScoreboard from "./useRefreshScoreboard";
-import { RootState } from '../store/store';
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from '../store/store';
 import BufferPeriodScoreboard from "./bufferPeriodScoreboard";
 import WeeklyScoreboard from "./weeklyScoreboard";
 import LastUpdated from './lastUpdated';
 import config from '../config.json';
+import { useInterval } from './useInterval';
+import { getScoreboard } from '../store/espnSlice';
 
 const BradyScoreboards: React.FC = () => {
     const currentWeek = useSelector<RootState>(state => state.espn.week) as number;
     const showBufferPeriodScoreboard = currentWeek <= config.bufferPeriodWeeks;
 
-    useRefreshScoreboard(5);
+    const dispatch = useDispatch<AppDispatch>();
+    useInterval(() => dispatch(getScoreboard()), 5000)
 
   return (
     <>

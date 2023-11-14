@@ -5,10 +5,12 @@ import { RootState } from '../store/store';
 
 const useSortedScoreboardRows = () => {
     const rows: ScoreboardRow[] = useSelector<RootState>(state => state.espn.scoreboardRows) as ScoreboardRow[];
-    let sorted = rows.filter(x => !x.team.isEliminated).slice();
-    sorted.sort((a,b) => b.projectedPoints - a.projectedPoints);
+    const sortedRows = rows
+        .filter(x => !x.team.isEliminated)
+        .slice()
+        .sort((a,b) => b.projectedPoints - a.projectedPoints);
 
-    return sorted;
+    return sortedRows;
 }
 
 export { useSortedScoreboardRows }

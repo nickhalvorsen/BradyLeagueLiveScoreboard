@@ -1,10 +1,10 @@
-import { PayloadAction } from '@reduxjs/toolkit';
-import { EspnSliceState } from './espnSlice';
+import { initialState } from './espnSlice';
 import config from '../config.json';
 import { EspnScoreboardApiResponse, Schedule, MatchupTeam } from './espnApiResponseTypes';
 
-const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadAction<EspnScoreboardApiResponse, string>) => {
-  const { teams, scoringPeriodId, schedule, settings } = action.payload;
+const getDataFromEspnResponse = (payload: EspnScoreboardApiResponse) => {
+  const state = { ...initialState };
+  const { teams, scoringPeriodId, schedule, settings } = payload;
   state.week = scoringPeriodId;
 
   // For Tuesday league maintenance, I need a screenshot of the previous week's scoreboard
@@ -36,6 +36,8 @@ const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadActio
   state.lastUpdated = new Date().toISOString();
   state.leagueName = settings.name;
   state.loaded = true;
+
+  return state;
 };
 
 const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Schedule) => boolean) => {
@@ -52,4 +54,4 @@ const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Sched
 const getTotalPoints = (team: MatchupTeam) => (team.totalPointsLive ?? team.totalPoints) + team.adjustment;
 const getProjectedPoints = (team: MatchupTeam) => (team.totalProjectedPointsLive ?? team.totalPoints) + team.adjustment;
 
-export { getScoreboardRequestHandler };
+export { getDataFromEspnResponse };

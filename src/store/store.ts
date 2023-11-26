@@ -1,10 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { espnSlice } from "./espnSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import { espnSlice } from './espnSlice';
 
 export const store = configureStore({
-    reducer: {
-        espn: espnSlice.reducer
-    },
+  reducer: {
+    espn: espnSlice.reducer,
+  },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

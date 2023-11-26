@@ -1,55 +1,55 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction } from '@reduxjs/toolkit';
 import { EspnSliceState } from './espnSlice';
 import config from '../config.json';
-import { EspnScoreboardApiResponse, Schedule, MatchupTeam } from "./espnApiResponseTypes";
+import { EspnScoreboardApiResponse, Schedule, MatchupTeam } from './espnApiResponseTypes';
 
 const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadAction<EspnScoreboardApiResponse, string>) => {
-    const { teams, scoringPeriodId, schedule } = action.payload;
-    state.week = scoringPeriodId;
+  const { teams, scoringPeriodId, schedule } = action.payload;
+  state.week = scoringPeriodId;
 
-    // For Tuesday league maintenance, I need a screenshot of the previous week's scoreboard
-    if (config.displayPreviousWeekScores)
-      state.week--;
+  // For Tuesday league maintenance, I need a screenshot of the previous week's scoreboard
+  if (config.displayPreviousWeekScores) state.week--;
 
-    const matchupTeams = getMatchupsFromSchedule(schedule, x => x.matchupPeriodId === state.week);
-    const bufferPeriodMatchupTeams = getMatchupsFromSchedule(schedule, x => x.matchupPeriodId <= config.bufferPeriodWeeks && x.matchupPeriodId <= state.week);
+  const matchupTeams = getMatchupsFromSchedule(schedule, (x) => x.matchupPeriodId === state.week);
+  const bufferPeriodMatchupTeams = getMatchupsFromSchedule(schedule, (x) => x.matchupPeriodId <= config.bufferPeriodWeeks && x.matchupPeriodId <= state.week);
 
-    state.teams = teams.map(t => ({
-      ...t,
-      isImmune: t.name.includes('🛡️'),
-      isEliminated: t.name.includes('💀'),
-    }));
+  state.teams = teams.map((t) => ({
+    ...t,
+    isImmune: t.name.includes('🛡️'),
+    isEliminated: t.name.includes('💀'),
+  }));
 
-    const scoreboardRows = matchupTeams.map(t => ({
-      team: state.teams.find(tt => tt.id === t.teamId)!,
-      totalPoints: getTotalPoints(t),
-      projectedPoints: getProjectedPoints(t),
-    }));
+  const scoreboardRows = matchupTeams.map((t) => ({
+    team: state.teams.find((tt) => tt.id === t.teamId)!,
+    totalPoints: getTotalPoints(t),
+    projectedPoints: getProjectedPoints(t),
+  }));
 
-    const bufferPeriodScoreboardRows = matchupTeams.map(s => ({
-      team: state.teams.find(t => t.id === s.teamId)!,
-      totalPoints: bufferPeriodMatchupTeams.filter(x => x.teamId === s.teamId).reduce((accum,matchup) => accum + getTotalPoints(matchup), 0), 
-      projectedPoints: bufferPeriodMatchupTeams.filter(x => x.teamId === s.teamId).reduce((accum,matchup) => accum + (getProjectedPoints(matchup)), 0), 
-    }));
+  const bufferPeriodScoreboardRows = matchupTeams.map((s) => ({
+    team: state.teams.find((t) => t.id === s.teamId)!,
+    totalPoints: bufferPeriodMatchupTeams.filter((x) => x.teamId === s.teamId).reduce((accum, matchup) => accum + getTotalPoints(matchup), 0),
+    projectedPoints: bufferPeriodMatchupTeams.filter((x) => x.teamId === s.teamId).reduce((accum, matchup) => accum + getProjectedPoints(matchup), 0),
+  }));
 
-    state.scoreboardRows = scoreboardRows;
-    state.bufferPeriodScoreboardRows = bufferPeriodScoreboardRows;
-    state.lastUpdated = new Date().toISOString();
-    state.loaded = true;
-}
+  state.scoreboardRows = scoreboardRows;
+  state.bufferPeriodScoreboardRows = bufferPeriodScoreboardRows;
+  state.lastUpdated = new Date().toISOString();
+  state.loaded = true;
+};
 
-const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Schedule) => boolean)  => {
-    const matchups = schedule.filter(scheduleFilter);
-    const scores = (matchups.map(x => x.away))
-      .concat(matchups.map(x => x.home))
-      // filter out null teams due to "bye week" matchups
-      // "bye week" matchups occur when there are an uneven amount of managers in league
-      .filter(x => !!x);
+const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Schedule) => boolean) => {
+  const matchups = schedule.filter(scheduleFilter);
+  const scores = matchups
+    .map((x) => x.away)
+    .concat(matchups.map((x) => x.home))
+    // filter out null teams due to "bye week" matchups
+    // "bye week" matchups occur when there are an uneven amount of managers in league
+    .filter((x) => !!x);
 
-      return scores;
-}
+  return scores;
+};
 
 const getTotalPoints = (team: MatchupTeam) => (team.totalPointsLive ?? team.totalPoints) + team.adjustment;
 const getProjectedPoints = (team: MatchupTeam) => (team.totalProjectedPointsLive ?? team.totalPoints) + team.adjustment;
 
-export { getScoreboardRequestHandler }
+export { getScoreboardRequestHandler };

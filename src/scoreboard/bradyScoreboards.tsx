@@ -21,7 +21,7 @@ const BradyScoreboards: React.FC = () => {
   return (
     <>
       {showBufferPeriodScoreboard ? <BufferPeriodScoreboard /> : <WeeklyScoreboard />}
-      {/* <LastUpdated/> */}
+      {/* WIP: <LastUpdated/> */}
     </>
   );
 };

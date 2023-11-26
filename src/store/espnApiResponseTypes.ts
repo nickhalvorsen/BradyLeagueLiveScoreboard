@@ -2,6 +2,7 @@ interface EspnScoreboardApiResponse {
   schedule: Schedule[];
   teams: Team[];
   scoringPeriodId: number;
+  settings: Settings;
 }
 
 interface Schedule {
@@ -21,6 +22,10 @@ interface MatchupTeam {
 interface Team {
   id: number;
   logo: string;
+  name: string;
+}
+
+interface Settings {
   name: string;
 }
 

@@ -24,6 +24,7 @@ type EspnSliceState = {
   bufferPeriodScoreboardRows: ScoreboardRow[];
   week: number;
   teams: Team[];
+  leagueName: string;
   lastUpdated?: string; // ISO string
   loaded: boolean;
 };
@@ -33,6 +34,7 @@ const initialState: EspnSliceState = {
   bufferPeriodScoreboardRows: [],
   week: 0,
   teams: [],
+  leagueName: '',
   lastUpdated: undefined,
   loaded: false,
 };
@@ -40,9 +42,7 @@ const initialState: EspnSliceState = {
 const getScoreboard = createAsyncThunk('espn/getScoreboard', async () => {
   // league needs to be public
   const response = await axios.get<EspnScoreboardApiResponse>(
-    `https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${
-      config.leagueId
-    }?view=mLiveScoring&view=mMatchupScore&view=mScoreboard`
+    `https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?view=mLiveScoring&view=mMatchupScore&view=mScoreboard`
   );
   return response.data;
 });

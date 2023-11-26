@@ -7,11 +7,14 @@ import { useSortedBufferPeriodScoreboardRows } from './useSortedBufferPeriodScor
 
 const BufferPeriodScoreboard: React.FC = () => {
   const week = useSelector<RootState>((state) => state.espn.week) as number;
+  const leagueName = useSelector<RootState>((state) => state.espn.leagueName) as string;
   const rows = useSortedBufferPeriodScoreboardRows();
 
   return (
     <div>
-      <p>TOM BRADY'S BATTLE ROYALE live week 1&ndash;{week} scoring totals</p>
+      <p>
+        {leagueName} live week 1&ndash;{week} scoring totals
+      </p>
       <p>({config.bufferPeriodWeeks} week buffer period)</p>
       <div>
         <Scoreboard rows={rows} />

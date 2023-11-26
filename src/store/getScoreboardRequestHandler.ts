@@ -4,7 +4,7 @@ import config from '../config.json';
 import { EspnScoreboardApiResponse, Schedule, MatchupTeam } from './espnApiResponseTypes';
 
 const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadAction<EspnScoreboardApiResponse, string>) => {
-  const { teams, scoringPeriodId, schedule } = action.payload;
+  const { teams, scoringPeriodId, schedule, settings } = action.payload;
   state.week = scoringPeriodId;
 
   // For Tuesday league maintenance, I need a screenshot of the previous week's scoreboard
@@ -34,6 +34,7 @@ const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadActio
   state.scoreboardRows = scoreboardRows;
   state.bufferPeriodScoreboardRows = bufferPeriodScoreboardRows;
   state.lastUpdated = new Date().toISOString();
+  state.leagueName = settings.name;
   state.loaded = true;
 };
 

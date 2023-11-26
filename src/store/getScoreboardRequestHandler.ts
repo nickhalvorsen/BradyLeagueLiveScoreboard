@@ -41,8 +41,7 @@ const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadActio
 const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Schedule) => boolean) => {
   const matchups = schedule.filter(scheduleFilter);
   const scores = matchups
-    .map((x) => x.away)
-    .concat(matchups.map((x) => x.home))
+    .flatMap((x) => [x.away, x.home])
     // filter out null teams due to "bye week" matchups
     // "bye week" matchups occur when there are an uneven amount of managers in league
     .filter((x) => !!x);

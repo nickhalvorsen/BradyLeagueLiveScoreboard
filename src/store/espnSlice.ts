@@ -25,6 +25,7 @@ type EspnSliceState = {
     week: number;
     teams: Team[];
     lastUpdated?: string; // ISO string
+    loaded: boolean;
 };
 
 const initialState: EspnSliceState = {
@@ -32,7 +33,8 @@ const initialState: EspnSliceState = {
     bufferPeriodScoreboardRows: [],
     week: 0,
     teams: [],
-    lastUpdated: undefined
+    lastUpdated: undefined,
+    loaded: false
 };
 
 const getScoreboard = createAsyncThunk(

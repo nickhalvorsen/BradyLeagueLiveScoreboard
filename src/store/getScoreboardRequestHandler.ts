@@ -35,6 +35,7 @@ const getScoreboardRequestHandler = (state: EspnSliceState, action: PayloadActio
     state.scoreboardRows = scoreboardRows;
     state.bufferPeriodScoreboardRows = bufferPeriodScoreboardRows;
     state.lastUpdated = new Date().toISOString();
+    state.loaded = true;
 }
 
 const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Schedule) => boolean)  => {

@@ -9,8 +9,8 @@ import { useInterval } from './useInterval';
 import { getScoreboard } from '../store/espnSlice';
 
 const BradyScoreboards: React.FC = () => {
-  const currentWeek = useSelector<RootState>((state) => state.espn.week) as number;
-  const loaded = useSelector<RootState>((state) => state.espn.loaded) as boolean;
+  const currentWeek = useSelector<RootState, number>((state) => state.espn.week);
+  const loaded = useSelector<RootState, boolean>((state) => state.espn.loaded);
   const showBufferPeriodScoreboard = currentWeek <= config.bufferPeriodWeeks;
 
   const dispatch = useDispatch<AppDispatch>();

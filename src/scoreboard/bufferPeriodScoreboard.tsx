@@ -6,8 +6,8 @@ import config from '../config.json';
 import { useSortedBufferPeriodScoreboardRows } from './useSortedBufferPeriodScoreboardRows';
 
 const BufferPeriodScoreboard: React.FC = () => {
-  const week = useSelector<RootState>((state) => state.espn.week) as number;
-  const leagueName = useSelector<RootState>((state) => state.espn.leagueName) as string;
+  const week = useSelector<RootState, number>((state) => state.espn.week);
+  const leagueName = useSelector<RootState, string>((state) => state.espn.leagueName);
   const rows = useSortedBufferPeriodScoreboardRows();
 
   return (

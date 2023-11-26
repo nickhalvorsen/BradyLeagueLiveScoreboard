@@ -3,7 +3,7 @@ import { ScoreboardRow } from '../store/espnSlice';
 import { RootState } from '../store/store';
 
 const useSortedBufferPeriodScoreboardRows = () => {
-  const rows = useSelector<RootState>((state) => state.espn.bufferPeriodScoreboardRows) as ScoreboardRow[];
+  const rows = useSelector<RootState, ScoreboardRow[]>((state) => state.espn.bufferPeriodScoreboardRows);
   const sortedRows = rows
     .filter((x) => !x.team.isEliminated)
     .slice()

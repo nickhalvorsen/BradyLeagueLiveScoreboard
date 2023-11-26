@@ -5,8 +5,8 @@ import { Scoreboard } from './scoreboard';
 import { useSortedScoreboardRows } from './useSortedScoreboardRows';
 
 const WeeklyScoreboard: React.FC = () => {
-  const weekNumber = useSelector<RootState>((state) => state.espn.week) as number;
-  const leagueName = useSelector<RootState>((state) => state.espn.leagueName) as string;
+  const weekNumber = useSelector<RootState, number>((state) => state.espn.week);
+  const leagueName = useSelector<RootState, string>((state) => state.espn.leagueName);
   const rows = useSortedScoreboardRows();
 
   return (

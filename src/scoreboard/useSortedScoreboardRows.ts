@@ -3,7 +3,7 @@ import { ScoreboardRow } from '../store/espnSlice';
 import { RootState } from '../store/store';
 
 const useSortedScoreboardRows = () => {
-  const rows = useSelector<RootState>((state) => state.espn.scoreboardRows) as ScoreboardRow[];
+  const rows = useSelector<RootState, ScoreboardRow[]>((state) => state.espn.scoreboardRows);
   const sortedRows = rows
     .filter((x) => !x.team.isEliminated)
     .slice()

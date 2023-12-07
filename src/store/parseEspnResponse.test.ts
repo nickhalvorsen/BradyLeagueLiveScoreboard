@@ -1,5 +1,5 @@
 import _response from './espnResponseExample.json';
-import { getDataFromEspnResponse } from './getDataFromEspnResponse';
+import { parseEspnResponse } from './parseEspnResponse';
 import { EspnScoreboardApiResponse } from './espnApiResponseTypes';
 import { vi, describe, it, expect, test } from 'vitest';
 import config from '../config.json';
@@ -13,13 +13,13 @@ vi.mock('../config.json', () => ({
   },
 }));
 
-describe('Get scoreboard request handler', () => {
+describe('Parse ESPN response', () => {
   it('runs without error', () => {
-    getDataFromEspnResponse(response);
+    parseEspnResponse(response);
   });
 
   it('returns correct week', () => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     expect(data.week).toBe(12);
   });
 
@@ -35,7 +35,7 @@ describe('Get scoreboard request handler', () => {
     ['Bikini Bottom Sponge Crew'],
     ['Drop Your Breeches, Mister!'],
   ])('includes all teams: %s', (teamName) => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     const teamNames = data.teams.map((x) => x.name);
     expect(teamNames.includes(teamName));
   });
@@ -52,7 +52,7 @@ describe('Get scoreboard request handler', () => {
     ['Bikini Bottom Sponge Crew', true],
     ['Drop Your Breeches, Mister!', true],
   ])('sets isEliminated correctly: %s, %s', (teamName, isEliminated) => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     const team = data.teams.find((x) => x.name.includes(teamName))!;
     expect(team.isEliminated).toBe(isEliminated);
   });
@@ -69,13 +69,13 @@ describe('Get scoreboard request handler', () => {
     ['Bikini Bottom Sponge Crew', false],
     ['Drop Your Breeches, Mister!', false],
   ])('sets isImmune correctly: %s, %s', (teamName, isImmune) => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     const team = data.teams.find((x) => x.name.includes(teamName))!;
     expect(team.isImmune).toBe(isImmune);
   });
 
   it('returns league name', () => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     expect(data.leagueName).toBe("TOM BRADY'S BATTLE ROYALE");
   });
 
@@ -83,7 +83,7 @@ describe('Get scoreboard request handler', () => {
     ['Brady', 194.9587002089],
     ['Team Glanzmann', 214.7378509371],
   ])('returns projected points for team %s', (teamName, expectedProjection) => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     const teamProjection = data.scoreboardRows.find((x) => x.team.name.includes(teamName))?.projectedPoints;
     expect(teamProjection).toBe(expectedProjection);
   });
@@ -92,7 +92,7 @@ describe('Get scoreboard request handler', () => {
     ['Brady', 31.3],
     ['Team Glanzmann', 145.03],
   ])('returns total points for team %s', (teamName, expectedTotal) => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     const totalPoints = data.scoreboardRows.find((x) => x.team.name.includes(teamName))?.totalPoints;
     expect(totalPoints).toBe(expectedTotal);
   });
@@ -109,7 +109,7 @@ describe('Get scoreboard request handler', () => {
     ['Bikini Bottom Sponge Crew', 425.71],
     ['Drop Your Breeches, Mister!', 482.29],
   ])('returns buffer period totals for %s', (teamName, expectedTotal) => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     const totalPoints = data.bufferPeriodScoreboardRows.find((x) => x.team.name.includes(teamName))?.totalPoints;
     expect(totalPoints).toBe(expectedTotal);
   });
@@ -126,7 +126,7 @@ describe('Get scoreboard request handler', () => {
     ['Bikini Bottom Sponge Crew', 425.71],
     ['Drop Your Breeches, Mister!', 482.29],
   ])('returns buffer period projections for %s', (teamName, expectedProjection) => {
-    const data = getDataFromEspnResponse(response);
+    const data = parseEspnResponse(response);
     const projectedPoints = data.bufferPeriodScoreboardRows.find((x) => x.team.name.includes(teamName))?.projectedPoints;
     expect(projectedPoints).toBe(expectedProjection);
   });

@@ -2,7 +2,7 @@ import { initialState } from './espnSlice';
 import config from '../config.json';
 import { EspnScoreboardApiResponse, Schedule, MatchupTeam } from './espnApiResponseTypes';
 
-const getDataFromEspnResponse = (payload: EspnScoreboardApiResponse) => {
+const parseEspnResponse = (payload: EspnScoreboardApiResponse) => {
   const state = { ...initialState };
   const { teams, scoringPeriodId, schedule, settings } = payload;
   state.week = scoringPeriodId;
@@ -54,4 +54,4 @@ const getMatchupsFromSchedule = (schedule: Schedule[], scheduleFilter: (x: Sched
 const getTotalPoints = (team: MatchupTeam) => (team.totalPointsLive ?? team.totalPoints) + team.adjustment;
 const getProjectedPoints = (team: MatchupTeam) => (team.totalProjectedPointsLive ?? team.totalPoints) + team.adjustment;
 
-export { getDataFromEspnResponse };
+export { parseEspnResponse };

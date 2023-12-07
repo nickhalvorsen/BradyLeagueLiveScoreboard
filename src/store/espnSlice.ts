@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getDataFromEspnResponse } from './getDataFromEspnResponse';
+import { parseEspnResponse } from './parseEspnResponse';
 import axios from 'axios';
 import { getSeasonYear } from './getSeasonYear';
 import config from '../config.json';
@@ -47,7 +47,7 @@ const getScoreboard = createAsyncThunk('espn/getScoreboard', async () => {
   return response.data;
 });
 
-const getScoreboardReducer = (state: EspnSliceState, action: PayloadAction<EspnScoreboardApiResponse, string>) => getDataFromEspnResponse(action.payload);
+const getScoreboardReducer = (state: EspnSliceState, action: PayloadAction<EspnScoreboardApiResponse, string>) => parseEspnResponse(action.payload);
 
 export const espnSlice = createSlice({
   name: 'espn',

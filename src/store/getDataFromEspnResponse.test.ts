@@ -1,16 +1,23 @@
 import _response from './espnResponseExample.json';
 import { getDataFromEspnResponse } from './getDataFromEspnResponse';
 import { EspnScoreboardApiResponse } from './espnApiResponseTypes';
-import { describe, it, expect, test } from 'vitest';
+import { vi, describe, it, expect, test } from 'vitest';
+import config from '../config.json';
 
 const response = _response as EspnScoreboardApiResponse;
+
+vi.mock('../config.json', () => ({
+  default: {
+    bufferPeriodWeeks: 3,
+    displayPreviousWeekScores: false,
+  },
+}));
 
 describe('Get scoreboard request handler', () => {
   it('runs without error', () => {
     getDataFromEspnResponse(response);
   });
 
-  // TODO: test should not use values from "live" config.json
   it('returns correct week', () => {
     const data = getDataFromEspnResponse(response);
     expect(data.week).toBe(12);

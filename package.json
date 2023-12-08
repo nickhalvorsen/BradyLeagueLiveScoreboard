@@ -4,8 +4,6 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
-    "@types/react": "^18.2.42",
-    "@types/react-redux": "^7.1.32",
     "axios": "^1.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -35,6 +33,8 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^18.2.42",
+    "@types/react-redux": "^7.1.32",
     "@vitejs/plugin-react": "^4.2.1",
     "sass": "^1.69.5",
     "typescript": "^5.3.3",

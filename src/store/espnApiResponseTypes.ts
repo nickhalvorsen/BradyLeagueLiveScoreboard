@@ -3,6 +3,7 @@ interface EspnScoreboardApiResponse {
   teams: Team[];
   scoringPeriodId: number;
   settings: Settings;
+  status: Status;
 }
 
 interface Schedule {
@@ -27,6 +28,10 @@ interface Team {
 
 interface Settings {
   name: string;
+}
+
+interface Status {
+  finalScoringPeriod: number;
 }
 
 export { EspnScoreboardApiResponse, Schedule, MatchupTeam };

@@ -1,29 +1,21 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store/store';
 import { BufferPeriodScoreboard } from './bufferPeriodScoreboard';
 import { WeeklyScoreboard } from './weeklyScoreboard';
-import { LastUpdated } from './lastUpdated';
 import config from '../config.json';
 import { useInterval } from './useInterval';
-import { getScoreboard } from '../store/espnSlice';
+import { useEspnStore } from '../store/espnStore';
 
 const BradyScoreboards: React.FC = () => {
-  const currentWeek = useSelector<RootState, number>((state) => state.espn.week);
-  const loaded = useSelector<RootState, boolean>((state) => state.espn.loaded);
+  const currentWeek = useEspnStore((state) => state.week);
+  const loaded = useEspnStore((state) => state.loaded);
   const showBufferPeriodScoreboard = currentWeek <= config.bufferPeriodWeeks;
 
-  const dispatch = useDispatch<AppDispatch>();
-  useInterval(() => dispatch(getScoreboard()), 5000);
+  const getScoreboard = useEspnStore((state) => state.getScoreboard);
+  useInterval(() => getScoreboard(), 5000);
 
   if (!loaded) return <div>Loading...</div>;
 
-  return (
-    <>
-      {showBufferPeriodScoreboard ? <BufferPeriodScoreboard /> : <WeeklyScoreboard />}
-      {/* WIP: <LastUpdated/> */}
-    </>
-  );
+  return <>{showBufferPeriodScoreboard ? <BufferPeriodScoreboard /> : <WeeklyScoreboard />}</>;
 };
 
 export { BradyScoreboards };

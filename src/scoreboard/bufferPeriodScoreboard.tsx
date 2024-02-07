@@ -1,19 +1,18 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import { Scoreboard } from './scoreboard';
 import config from '../config.json';
 import { useSortedBufferPeriodScoreboardRows } from './useSortedBufferPeriodScoreboardRows';
+import { useEspnStore } from '../store/espnStore';
 
 const BufferPeriodScoreboard: React.FC = () => {
-  const week = useSelector<RootState, number>((state) => state.espn.week);
-  const leagueName = useSelector<RootState, string>((state) => state.espn.leagueName);
+  const currentWeek = useEspnStore((state) => state.week);
+  const leagueName = useEspnStore((state) => state.leagueName);
   const rows = useSortedBufferPeriodScoreboardRows();
 
   return (
     <div>
       <p>
-        {leagueName} live week 1&ndash;{week} scoring totals
+        {leagueName} live week 1&ndash;{currentWeek} scoring totals
       </p>
       <p>({config.bufferPeriodWeeks} week buffer period)</p>
       <div>

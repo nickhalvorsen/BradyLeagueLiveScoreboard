@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
-import { ScoreboardRow } from '../store/espnSlice';
-import { RootState } from '../store/store';
+import { useEspnStore } from '../store/espnStore';
 
 const useSortedScoreboardRows = () => {
-  const rows = useSelector<RootState, ScoreboardRow[]>((state) => state.espn.scoreboardRows);
+  const rows = useEspnStore((state) => state.scoreboardRows);
   const sortedRows = rows
     .filter((x) => !x.team.isEliminated)
     .slice()

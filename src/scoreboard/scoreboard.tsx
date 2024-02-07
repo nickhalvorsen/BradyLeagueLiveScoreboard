@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScoreboardRow } from './scoreboardRow';
-import { ScoreboardRow as ScoreboardRowData } from '../store/espnSlice';
+import { ScoreboardRow as ScoreboardRowData } from '../store/espnStore';
 import classes from './scoreboard.module.scss';
 
 interface Props {

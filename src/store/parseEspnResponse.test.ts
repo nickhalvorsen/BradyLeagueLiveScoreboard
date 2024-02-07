@@ -2,7 +2,6 @@ import _response from './espnResponseExample.json';
 import { parseEspnResponse } from './parseEspnResponse';
 import { EspnScoreboardApiResponse } from './espnApiResponseTypes';
 import { vi, describe, it, expect, test } from 'vitest';
-import config from '../config.json';
 
 const response = _response as EspnScoreboardApiResponse;
 

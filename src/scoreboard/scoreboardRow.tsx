@@ -11,7 +11,7 @@ interface Props {
   imageUrl?: string;
 }
 
-const ScoreboardRow: React.FC<Props> = (props: Props) => (
+const ScoreboardRow: React.FC<Props> = (props) => (
   <div className={`${classes.container} ${props.isLast ? classes.isLast : ''}`}>
     <div className={classes.nameContainer}>
       <img className={classes.icon} src={props.imageUrl} width="24" alt="team logo" />

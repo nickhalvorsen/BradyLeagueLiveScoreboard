@@ -22,6 +22,11 @@ describe('Parse ESPN response', () => {
     expect(data.week).toBe(12);
   });
 
+  it('determines if season is active', () => {
+    const data = parseEspnResponse(response);
+    expect(data.isSeasonActive).toBe(true);
+  });
+
   test.each([
     ['Brady'],
     ['Team Glanzmann'],

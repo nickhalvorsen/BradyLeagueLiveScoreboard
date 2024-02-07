@@ -36,6 +36,7 @@ const parseEspnResponse = (payload: EspnScoreboardApiResponse) => {
     bufferPeriodScoreboardRows: bufferPeriodScoreboardRows,
     lastUpdated: new Date().toISOString(),
     leagueName: settings.name,
+    isSeasonActive: scoringPeriodId <= status.finalScoringPeriod && status.isActive,
   };
 };
 

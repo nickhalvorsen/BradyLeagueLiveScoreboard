@@ -27,6 +27,7 @@ type EspnState = {
   leagueName: string;
   lastUpdated?: string; // ISO string
   loaded: boolean;
+  isSeasonActive: boolean;
   getScoreboard: () => Promise<void>;
 };
 
@@ -38,6 +39,7 @@ const useEspnStore = create<EspnState>((set) => ({
   leagueName: '',
   lastUpdated: undefined,
   loaded: false,
+  isSeasonActive: false,
   getScoreboard: async () => {
     const response = await axios.get<EspnScoreboardApiResponse>(
       `https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/${getSeasonYear()}/segments/0/leagues/${config.leagueId}?view=mLiveScoring&view=mMatchupScore&view=mScoreboard`

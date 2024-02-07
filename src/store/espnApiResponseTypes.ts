@@ -32,6 +32,7 @@ interface Settings {
 
 interface Status {
   finalScoringPeriod: number;
+  isActive: boolean;
 }
 
 export { EspnScoreboardApiResponse, Schedule, MatchupTeam };

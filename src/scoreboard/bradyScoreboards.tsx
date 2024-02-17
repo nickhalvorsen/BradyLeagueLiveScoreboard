@@ -18,7 +18,7 @@ const BradyScoreboards: React.FC = () => {
   if (!loaded) return <div>Loading...</div>;
   if (!isSeasonActive) return <div>{leagueName} season is over, thanks for playing!</div>;
 
-  return <>{showBufferPeriodScoreboard ? <BufferPeriodScoreboard /> : <WeeklyScoreboard />}</>;
+  return showBufferPeriodScoreboard ? <BufferPeriodScoreboard /> : <WeeklyScoreboard />;
 };
 
 export { BradyScoreboards };
